@@ -38,26 +38,16 @@ services:
         # you need to also change the bridge network IP and subnet below.
         ipv4_address: 192.168.88.10
 
-    db:
-      image: mysql:5.7
+    mysql:
+      container_name: flask_mysql
       restart: always
+      image: mysql:latest
       environment:
-        MYSQL_DATABASE: 'drupal'
-        # So you don't have to use root, but you can if you like
+        MYSQL_ROOT_PASSWORD: 'drupal' # TODO: Change this
         MYSQL_USER: 'drupal'
-        # You can use whatever password you like
-        MYSQL_PASSWORD: 'drupal'
-        # Password for root access
-        MYSQL_ROOT_PASSWORD: 'drupal'
-      ports:
-        # <Port exposed> : < MySQL Port running inside container>
-        - '3306:3306'
-      expose:
-        # Opens port 3306 on the container
-        - '3306'
-        # Where our data will be persisted
+        MYSQL_PASS: 'drupal'
       volumes:
-        - my-db:/var/lib/mysql
+        - my-datavolume:/var/lib/mysql
 
 networks:
   # This custom network allows Drupal VM to be accessed on an IP address.
@@ -71,4 +61,4 @@ networks:
 
 # Names our volume
 volumes:
-  my-db:
+  my-datavolume:
