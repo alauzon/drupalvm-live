@@ -16,7 +16,6 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 3306:3306
       - 4444:4444
       - 8025:8025
 
@@ -38,6 +37,17 @@ services:
         # service running on the default IP address. If you change the subnet,
         # you need to also change the bridge network IP and subnet below.
         ipv4_address: 192.168.88.10
+
+    mariadb:
+      image: amazeeio/mariadb-drupal
+      labels:
+        lagoon.type: mariadb
+      ports:
+        - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+      << : *default-user # uses the defined user from top
+      environment:
+        << : *default-environment    
+    
 
 networks:
 
