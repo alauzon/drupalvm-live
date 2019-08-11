@@ -16,6 +16,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 3306:3306
       - 4444:4444
       - 8025:8025
 
@@ -38,17 +39,6 @@ services:
         # you need to also change the bridge network IP and subnet below.
         ipv4_address: 192.168.88.10
 
-  mysql:
-    container_name: flask_mysql
-    restart: always
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: 'drupal' # TODO: Change this
-      MYSQL_USER: 'drupal'
-      MYSQL_PASS: 'drupal'
-    volumes:
-      - my-datavolume:/var/lib/mysql
-
 networks:
   # This custom network allows Drupal VM to be accessed on an IP address.
   drupalvm:
@@ -58,7 +48,3 @@ networks:
     ipam:
       config:
         - subnet: "192.168.88.0/16"
-
-# Names our volume
-volumes:
-  my-datavolume:
