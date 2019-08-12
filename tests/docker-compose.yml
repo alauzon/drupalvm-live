@@ -14,8 +14,7 @@ services:
       - mysql_data:/var/lib/mysql
     restart: always
     networks:
-      drupalvm:
-        ipv4_address: 192.168.88.11
+      - drupalvm
 
   drupal-vm:
     image: geerlingguy/drupal-vm
@@ -38,15 +37,9 @@ services:
     privileged: true
     command: /lib/systemd/systemd
     networks:
-      drupalvm:
-        ipv4_address: 192.168.88.10
+      - drupalvm
 networks:
   drupalvm:
     driver: bridge
-    driver_opts:
-      ip: 192.168.88.1
-    ipam:
-      config:
-        - subnet: "192.168.88.0/16"
 volumes:
   mysql_data:
