@@ -2,10 +2,26 @@ version: "3"
 
 services:
 
+  mysql:
+    image: mysql
+    container_name: mysql-drupal
+    environment:
+      MYSQL_ROOT_PASSWORD: "mypassword"
+      MYSQL_DATABASE: "drupal"
+      MYSQL_USER: "drupal"
+      MYSQL_PASS: "drupal"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    networks:
+      drupalvm:
+        ipv4_address: 192.168.88.11
+
   drupal-vm:
     image: geerlingguy/drupal-vm
     container_name: local-drupalvm
-
+    depends_on:
+      - mysql
     ports:
       - 81:80
       - 4444:4444
@@ -21,3 +37,16 @@ services:
 
     privileged: true
     command: /lib/systemd/systemd
+    networks:
+      drupalvm:
+        ipv4_address: 192.168.88.10
+networks:
+  drupalvm:
+    driver: bridge
+    driver_opts:
+      ip: 192.168.88.1
+    ipam:
+      config:
+        - subnet: "192.168.88.0/16"
+volumes:
+  mysql_data:
