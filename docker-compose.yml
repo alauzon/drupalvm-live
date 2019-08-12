@@ -2,6 +2,20 @@ version: "3"
 
 services:
 
+  mysql:
+    image: mysql
+    container_name: mysql-drupal
+    environment:
+      MYSQL_ROOT_PASSWORD: "mypassword"
+      MYSQL_DATABASE: "drupal"
+      MYSQL_USER: "drupal"
+      MYSQL_PASS: "drupal"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    networks:
+      - drupalvm
+
   drupal-vm:
 
     # Switch the image to `geerlingguy/drupal-vm` to use Drupal VM defaults.
@@ -12,11 +26,11 @@ services:
 
     # Set this to your project's machine name (e.g. example-com)
     container_name: local-drupalvm
-
+    depends_on:
+      - mysql
     ports:
       - 80:80
       - 443:443
-      - 3306:3306
       - 4444:4444
       - 8025:8025
 
@@ -38,9 +52,10 @@ services:
         # service running on the default IP address. If you change the subnet,
         # you need to also change the bridge network IP and subnet below.
         ipv4_address: 192.168.88.10
+  
+
 
 networks:
-
   # This custom network allows Drupal VM to be accessed on an IP address.
   drupalvm:
     driver: bridge
@@ -49,3 +64,6 @@ networks:
     ipam:
       config:
         - subnet: "192.168.88.0/16"
+
+volumes:
+  mysql_data:
